@@ -27,7 +27,7 @@ con = mysql.connector.connect(
 app = Flask(__name__)
 CORS(app)
 
-@app.route("/practica8AWI40/")
+@app.route("/")
 def index():
     if not con.is_connected():
         con.reconnect()
@@ -36,7 +36,7 @@ def index():
 
     return render_template("index.html")
 
-@app.route("/practica8AWI40/app")
+@app.route("/app")
 def app2():
     if not con.is_connected():
         con.reconnect()
@@ -45,7 +45,7 @@ def app2():
 
     return "<h5>Hola, soy la view app</h5>"
 
-@app.route("/practica8AWI40/productos")
+@app.route("/productos")
 def productos():
     if not con.is_connected():
         con.reconnect()
@@ -77,7 +77,7 @@ def productos():
 
     return render_template("productos.html", productos=registros)
 
-@app.route("/practica8AWI40/productos/buscar", methods=["GET"])
+@app.route("/productos/buscar", methods=["GET"])
 def buscarProductos():
     if not con.is_connected():
         con.reconnect()
@@ -128,7 +128,7 @@ def buscarProductos():
 
     return make_response(jsonify(registros))
 
-@app.route("/practica8AWI40/producto", methods=["POST"])
+@app.route("/producto", methods=["POST"])
 # Usar cuando solo se quiera usar CORS en rutas específicas
 # @cross_origin()
 def guardarProducto():
@@ -167,7 +167,7 @@ def guardarProducto():
 
     return make_response(jsonify({}))
 
-@app.route("/practica8AWI40/producto/<int:id>")
+@app.route("/producto/<int:id>")
 def editarProducto(id):
     if not con.is_connected():
         con.reconnect()
@@ -188,7 +188,7 @@ def editarProducto(id):
 
     return make_response(jsonify(registros))
 
-@app.route("/practica8AWI40/producto/eliminar", methods=["POST"])
+@app.route("/producto/eliminar", methods=["POST"])
 def eliminarProducto():
     if not con.is_connected():
         con.reconnect()
@@ -207,3 +207,4 @@ def eliminarProducto():
     con.close()
 
     return make_response(jsonify({}))
+
