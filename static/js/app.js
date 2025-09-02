@@ -67,6 +67,30 @@ app.run(["$rootScope", "$location", "$timeout", function($rootScope, $location, 
 app.controller("appCtrl", function ($scope, $http) {
 })
 app.controller("productosCtrl", function ($scope, $http) {
+    $(document).on("submit", "#frmProducto", function (event) {
+        event.preventDefault()
+
+        $.post("/producto", {
+            id: "",
+            nombre: $("#txtNombre").val(),
+            precio: $("#txtPrecio").val(),
+            existencias: $("#txtExistencias").val(),
+        }, function (respuesta) {
+            //
+        })
+    })
+
+    $(document).on("click", ".btn-ingredientes", function (event) {
+        const id = $(this).data("id")
+
+        $.get(`/productos/ingredientes/${id}`, function (html) {
+            modal(html, "Ingredientes", [
+                {html: "Aceptar", class: "btn btn-secondary", fun: function (event) {
+                    closeModal()
+                }}
+            ])
+        })
+    })
 })
 
 const DateTime = luxon.DateTime
@@ -86,3 +110,4 @@ document.addEventListener("DOMContentLoaded", function (event) {
 
     activeMenuOption(location.hash)
 })
+
