@@ -47,6 +47,11 @@ def app2():
 
 @app.route("/productos")
 def productos():
+    return render_template("productos.html")
+
+
+@app.route("/tbodyProductos")
+def tbodyProductos():
     if not con.is_connected():
         con.reconnect()
 
@@ -58,6 +63,8 @@ def productos():
            Existencias
 
     FROM productos
+
+    ORDER BY Id_Producto DESC
 
     LIMIT 10 OFFSET 0
     """
@@ -75,7 +82,26 @@ def productos():
         registro["Hora"]       = fecha_hora.strftime("%H:%M:%S")
     """
 
-    return render_template("productos.html", productos=registros)
+    return render_template("tbodyProductos.html", productos=registros)
+
+@app.route("/productos/ingredientes/<int:id>")
+def productos2(id):
+    if not con.is_connected():
+        con.reconnect()
+
+    cursor = con.cursor(dictionary=True)
+    sql    = """
+    SELECT productos.Nombre_Producto, ingredientes.*, productos_ingredientes.Cantidad FROM productos_ingredientes
+    INNER JOIN productos ON productos.Id_Producto = productos_ingredientes.Id_Producto
+    INNER JOIN ingredientes ON ingredientes.Id_Ingrediente = productos_ingredientes.Id_Ingrediente
+    WHERE productos_ingredientes.Id_Producto = %s
+    ORDER BY productos.Nombre_Producto
+    """
+
+    cursor.execute(sql, (id, ))
+    registros = cursor.fetchall()
+
+    return render_template("modal.html", productosIngredientes=registros)
 
 @app.route("/productos/buscar", methods=["GET"])
 def buscarProductos():
@@ -207,4 +233,5 @@ def eliminarProducto():
     con.close()
 
     return make_response(jsonify({}))
+
 
