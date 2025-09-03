@@ -14,12 +14,28 @@ app.config(function ($routeProvider, $locationProvider) {
 
     $routeProvider
     .when("/", {
-        templateUrl: "app",
+        templateUrl: "/app",
         controller: "appCtrl"
     })
     .when("/productos", {
-        templateUrl: "productos",
+        templateUrl: "/productos",
         controller: "productosCtrl"
+    })
+    .when("/alumnos", {
+        templateUrl: "/alumnos",
+        controller: "alumnosCtrl"
+    })
+    .when("/ventas", {
+        templateUrl: "/ventas",
+        controller: "ventasCtrl"
+    })
+    .when("/reportes", {
+        templateUrl: "/reportes",
+        controller: "reportesCtrl"
+    })
+    .when("/notificaciones", {
+        templateUrl: "/notificaciones",
+        controller: "notificacionesCtrl"
     })
     .otherwise({
         redirectTo: "/"
@@ -67,6 +83,14 @@ app.run(["$rootScope", "$location", "$timeout", function($rootScope, $location, 
 app.controller("appCtrl", function ($scope, $http) {
 })
 app.controller("productosCtrl", function ($scope, $http) {
+    function buscarProductos() {
+        $.get("/tbodyProductos", function (trsHTML) {
+            $("#tbodyProductos").html(trsHTML)
+        })
+    }
+
+    buscarProductos()
+    
     $(document).on("submit", "#frmProducto", function (event) {
         event.preventDefault()
 
@@ -76,7 +100,7 @@ app.controller("productosCtrl", function ($scope, $http) {
             precio: $("#txtPrecio").val(),
             existencias: $("#txtExistencias").val(),
         }, function (respuesta) {
-            //
+            buscarProductos()
         })
     })
 
@@ -91,6 +115,14 @@ app.controller("productosCtrl", function ($scope, $http) {
             ])
         })
     })
+})
+app.controller("alumnosCtrl", function ($scope, $http) {
+})
+app.controller("ventasCtrl", function ($scope, $http) {
+})
+app.controller("reportesCtrl", function ($scope, $http) {
+})
+app.controller("notificacionesCtrl", function ($scope, $http) {
 })
 
 const DateTime = luxon.DateTime
@@ -110,4 +142,5 @@ document.addEventListener("DOMContentLoaded", function (event) {
 
     activeMenuOption(location.hash)
 })
+
 
