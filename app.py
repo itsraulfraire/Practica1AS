@@ -27,19 +27,18 @@ con = mysql.connector.connect(
 app = Flask(__name__)
 CORS(app)
 
-@app.route("/pusherProductos")
 def pusherProductos():
     import pusher
     
     pusher_client = pusher.Pusher(
-      app_id='2046026',
-      key='c018d337fb7e8338dc3a',
-      secret='ee47376ce42adae4531e',
-      cluster='us2',
+      app_id="2046005",
+      key="e57a8ad0a9dc2e83d9a2",
+      secret="8a116dd9600a3b04a3a0",
+      cluster="us2",
       ssl=True
     )
     
-    pusher_client.trigger('rapid-bird-168', 'eventoProducto', {'message': 'hola Pusher'})
+    pusher_client.trigger("canalProductos", "eventoProductos", {"message": "Hola Mundo!"})
     return make_response(jsonify({}))
 
 @app.route("/")
@@ -58,12 +57,38 @@ def app2():
 
     con.close()
 
-    return "<h5>Hola, soy la view app</h5>"
+    return render_template("login.html")
+    # return "<h5>Hola, soy la view app</h5>"
+
+@app.route("/iniciarSesion", methods=["POST"])
+# Usar cuando solo se quiera usar CORS en rutas específicas
+# @cross_origin()
+def iniciarSesion():
+    if not con.is_connected():
+        con.reconnect()
+
+    usuario    = request.form["txtUsuario"]
+    contrasena = request.form["txtContrasena"]
+
+    cursor = con.cursor(dictionary=True)
+    sql    = """
+    SELECT Id_Usuario
+    FROM usuarios
+
+    WHERE Nombre_Usuario = %s
+    AND Contrasena = %s
+    """
+    val    = (usuario, contrasena)
+
+    cursor.execute(sql, val)
+    registros = cursor.fetchall()
+    con.close()
+
+    return make_response(jsonify(registros))
 
 @app.route("/productos")
 def productos():
     return render_template("productos.html")
-
 
 @app.route("/tbodyProductos")
 def tbodyProductos():
@@ -100,7 +125,7 @@ def tbodyProductos():
     return render_template("tbodyProductos.html", productos=registros)
 
 @app.route("/productos/ingredientes/<int:id>")
-def productos2(id):
+def productosIngredientes(id):
     if not con.is_connected():
         con.reconnect()
 
@@ -206,6 +231,8 @@ def guardarProducto():
     con.commit()
     con.close()
 
+    pusherProductos()
+    
     return make_response(jsonify({}))
 
 @app.route("/producto/<int:id>")
@@ -248,6 +275,3 @@ def eliminarProducto():
     con.close()
 
     return make_response(jsonify({}))
-
-
-
