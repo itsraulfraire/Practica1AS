@@ -266,22 +266,39 @@ def editarMascota(idMascota):
 
     return make_response(jsonify(registros))
 
+def get_connection():
+    return mysql.connector.connect(
+        host="185.232.14.52",
+        database="u760464709_23005116_bd",
+        user="u760464709_23005116_usr",
+        password="z8[T&05u"
+    )
+
 @app.route("/mascota/eliminar", methods=["POST"])
 def eliminarMascota():
-    if not con.is_connected():
-        con.reconnect()
+    idMascota = request.form.get("idMascota")
+    if not idMascota:
+        return make_response(jsonify({"error": "idMascota no proporcionado"}), 400)
 
-    idMascota = request.form["idMascota"]
-
-    cursor = con.cursor(dictionary=True)
-    sql    = """
-    DELETE FROM mascotas
-    WHERE idMascota = %s
-    """
-    val    = (idMascota)
-
-    cursor.execute(sql, val)
-    con.commit()
-    con.close()
-
-    return make_response(jsonify({}))
+    con = None
+    cursor = None
+    try:
+        con = get_connection()
+        cursor = con.cursor()
+        sql = "DELETE FROM mascotas WHERE idMascota = %s"
+        val = (idMascota,)
+        cursor.execute(sql, val)
+        con.commit()
+        filas = cursor.rowcount
+        return make_response(jsonify({"deleted_rows": filas}), 200)
+    except mysql.connector.Error as e:
+        app.logger.exception("Error eliminando mascota:")
+        return make_response(jsonify({"error": str(e)}), 500)
+    finally:
+        try:
+            if cursor:
+                cursor.close()
+            if con:
+                con.close()
+        except Exception:
+            pass
