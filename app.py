@@ -19,9 +19,9 @@ from flask_cors import CORS, cross_origin
 
 con = mysql.connector.connect(
     host="185.232.14.52",
-    database="u760464709_16005339_bd",
-    user="u760464709_16005339_usr",
-    password="/iJRzrJBz+P1"
+    database="u760464709_23005270_bd",
+    user="u760464709_23005270_usr",
+    password="$x[QjFu>Lt9H"
 )
 
 app = Flask(__name__)
@@ -72,11 +72,11 @@ def iniciarSesion():
 
     cursor = con.cursor(dictionary=True)
     sql    = """
-    SELECT Id_Usuario
+    SELECT id_usuarios
     FROM usuarios
 
-    WHERE Nombre_Usuario = %s
-    AND Contrasena = %s
+    WHERE nombre_usuario = %s
+    AND contrasena = %s
     """
     val    = (usuario, contrasena)
 
@@ -275,4 +275,5 @@ def eliminarProducto():
     con.close()
 
     return make_response(jsonify({}))
+
 
