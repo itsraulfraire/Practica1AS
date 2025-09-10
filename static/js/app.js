@@ -102,11 +102,11 @@ app.controller("productosCtrl", function ($scope, $http) {
     // Enable pusher logging - don't include this in production
     Pusher.logToConsole = true
 
-    var pusher = new Pusher("e57a8ad0a9dc2e83d9a2", {
+    var pusher = new Pusher("c018d337fb7e8338dc3a", {
       cluster: "us2"
     })
 
-    var channel = pusher.subscribe("canalProductos")
+    var channel = pusher.subscribe("rapid-bird-168")
     channel.bind("eventoProductos", function(data) {
         // alert(JSON.stringify(data))
         buscarProductos()
@@ -150,11 +150,11 @@ app.controller("decoracionesCtrl", function ($scope, $http) {
     // Enable pusher logging - don't include this in production
     Pusher.logToConsole = true
 
-    var pusher = new Pusher("e57a8ad0a9dc2e83d9a2", {
+    var pusher = new Pusher("c018d337fb7e8338dc3a", {
       cluster: "us2"
     })
 
-    var channel = pusher.subscribe("canalDecoraciones")
+    var channel = pusher.subscribe("rapid-bird-168")
     channel.bind("eventoDecoraciones", function(data) {
         // alert(JSON.stringify(data))
         buscarDecoraciones()
@@ -191,3 +191,4 @@ document.addEventListener("DOMContentLoaded", function (event) {
 
     activeMenuOption(location.hash)
 })
+
