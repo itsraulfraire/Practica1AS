@@ -115,7 +115,7 @@ app.controller("mascotasCtrl", function ($scope, $http) {
     })
 
     $(document).off("click", ".btn-eliminar").on("click", ".btn-eliminar", function () {
-        const id = $(this).data("idmascota")
+        const id = $(this).data("id")
 
         if (!confirm("¿Seguro que deseas eliminar este mascota?")) {
             return
@@ -158,3 +158,4 @@ document.addEventListener("DOMContentLoaded", function (event) {
 
     activeMenuOption(location.hash)
 })
+
