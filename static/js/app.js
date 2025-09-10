@@ -117,14 +117,25 @@ app.controller("mascotasCtrl", function ($scope, $http) {
     $(document).off("click", ".btn-eliminar").on("click", ".btn-eliminar", function () {
         const id = $(this).data("id");
     
-        if (!confirm("¿Seguro que deseas eliminar esta mascota?")) {
-            return
+        if (!id) {
+            alert("ID de la mascota no encontrado (id undefined). Revisa el atributo data-id en el botón.");
+            return;
         }
     
-        $.post("/mascota/eliminar", { idMascota: id }, function () {
-            buscarMascotas()
-        }).fail(function(xhr) {
-            alert("Error al eliminar: " + xhr.responseText)
+        if (!confirm("¿Seguro que deseas eliminar esta mascota?")) return;
+    
+        $.ajax({
+            url: "/mascota/eliminar",
+            method: "POST",
+            data: { idMascota: id },
+            success: function (res) {
+                console.log("Eliminación OK:", res);
+                buscarMascotas();
+            },
+            error: function (xhr, status, err) {
+                console.error("Error al eliminar:", status, err, xhr.responseText);
+                alert("Error al eliminar: " + (xhr.responseText || err || status));
+            }
         })
     })
 })
@@ -146,6 +157,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
 
     activeMenuOption(location.hash)
 })
+
 
 
 
