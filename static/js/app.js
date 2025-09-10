@@ -116,27 +116,15 @@ app.controller("mascotasCtrl", function ($scope, $http) {
 
     $(document).off("click", ".btn-eliminar").on("click", ".btn-eliminar", function () {
         const id = $(this).data("id")
-
-        if (!confirm("¿Seguro que deseas eliminar este mascota?")) {
+    
+        if (!confirm("¿Seguro que deseas eliminar esta mascota?")) {
             return
         }
-
+    
         $.post("/mascota/eliminar", { idMascota: id }, function () {
             buscarMascotas()
         }).fail(function(xhr) {
             alert("Error al eliminar: " + xhr.responseText)
-        })
-    })
-
-    $(document).on("click", ".btn-ingredientes", function (event) {
-        const id = $(this).data("id")
-
-        $.get(`/productos/ingredientes/${id}`, function (html) {
-            modal(html, "Ingredientes", [
-                {html: "Aceptar", class: "btn btn-secondary", fun: function (event) {
-                    closeModal()
-                }}
-            ])
         })
     })
 })
@@ -158,4 +146,5 @@ document.addEventListener("DOMContentLoaded", function (event) {
 
     activeMenuOption(location.hash)
 })
+
 
