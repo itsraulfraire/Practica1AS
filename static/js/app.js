@@ -21,22 +21,17 @@ app.config(function ($routeProvider, $locationProvider) {
         templateUrl: "/productos",
         controller: "productosCtrl"
     })
-    .when("/alumnos", {
-        templateUrl: "/alumnos",
-        controller: "alumnosCtrl"
+
+
+
+    .when("/decoraciones", {
+        templateUrl: "/decoraciones",
+        controller: "decoracionesCtrl"
     })
-    .when("/ventas", {
-        templateUrl: "/ventas",
-        controller: "ventasCtrl"
-    })
-    .when("/reportes", {
-        templateUrl: "/reportes",
-        controller: "reportesCtrl"
-    })
-    .when("/notificaciones", {
-        templateUrl: "/notificaciones",
-        controller: "notificacionesCtrl"
-    })
+
+
+
+
     .otherwise({
         redirectTo: "/"
     })
@@ -81,6 +76,19 @@ app.run(["$rootScope", "$location", "$timeout", function($rootScope, $location, 
 }])
 
 app.controller("appCtrl", function ($scope, $http) {
+    $("#frmInicioSesion").submit(function (event) {
+        event.preventDefault()
+        $.post("iniciarSesion", $(this).serialize(), function (respuesta) {
+            if (respuesta.length) {
+                alert("Iniciaste Sesión")
+                window.location = "/#/productos"
+
+                return
+            }
+
+            alert("Usuario y/o Contraseña Incorrecto(s)")
+        })
+    })
 })
 app.controller("productosCtrl", function ($scope, $http) {
     function buscarProductos() {
@@ -98,9 +106,10 @@ app.controller("productosCtrl", function ($scope, $http) {
       cluster: "us2"
     })
 
-    var channel = pusher.subscribe("rapid-bird-168")
+    var channel = pusher.subscribe("canalProductos")
     channel.bind("eventoProductos", function(data) {
-        alert(JSON.stringify(data))
+        // alert(JSON.stringify(data))
+        buscarProductos()
     })
 
     $(document).on("submit", "#frmProducto", function (event) {
@@ -111,8 +120,6 @@ app.controller("productosCtrl", function ($scope, $http) {
             nombre: $("#txtNombre").val(),
             precio: $("#txtPrecio").val(),
             existencias: $("#txtExistencias").val(),
-        }, function (respuesta) {
-            buscarProductos()
         })
     })
 
@@ -128,14 +135,44 @@ app.controller("productosCtrl", function ($scope, $http) {
         })
     })
 })
-app.controller("alumnosCtrl", function ($scope, $http) {
+
+
+
+app.controller("decoracionesCtrl", function ($scope, $http) {
+    function buscarDecoraciones() {
+        $.get("/tbodyDecoraciones", function (trsHTML) {
+            $("#tbodyDecoraciones").html(trsHTML)
+        })
+    }
+
+    buscarDecoraciones()
+    
+    // Enable pusher logging - don't include this in production
+    Pusher.logToConsole = true
+
+    var pusher = new Pusher("e57a8ad0a9dc2e83d9a2", {
+      cluster: "us2"
+    })
+
+    var channel = pusher.subscribe("canalDecoraciones")
+    channel.bind("eventoDecoraciones", function(data) {
+        // alert(JSON.stringify(data))
+        buscarDecoraciones()
+    })
+
+    $(document).on("submit", "#frmDecoracion", function (event) {
+        event.preventDefault()
+
+        $.post("/decoracion", {
+            id: "",
+            nombre: $("#txtNombre").val(),
+            precio: $("#txtPrecio").val(),
+            existencias: $("#txtExistencias").val(),
+        })
+    })
 })
-app.controller("ventasCtrl", function ($scope, $http) {
-})
-app.controller("reportesCtrl", function ($scope, $http) {
-})
-app.controller("notificacionesCtrl", function ($scope, $http) {
-})
+
+
 
 const DateTime = luxon.DateTime
 let lxFechaHora
@@ -154,9 +191,3 @@ document.addEventListener("DOMContentLoaded", function (event) {
 
     activeMenuOption(location.hash)
 })
-
-
-
-
-
-
