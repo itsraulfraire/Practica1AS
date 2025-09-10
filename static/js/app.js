@@ -88,6 +88,7 @@ app.controller("mascotasCtrl", function ($scope, $http) {
 
     buscarMascotas()
     
+    // Enable pusher logging - don't include this in production
     Pusher.logToConsole = true
 
     var pusher = new Pusher("c018d337fb7e8338dc3a", {
@@ -96,33 +97,41 @@ app.controller("mascotasCtrl", function ($scope, $http) {
 
     var channel = pusher.subscribe("rapid-bird-168")
     channel.bind("eventoMascotas", function(data) {
+        // alert(JSON.stringify(data))
         buscarMascotas()
     })
 
-    $(document).off("submit", "#frmMascota")  
     $(document).on("submit", "#frmMascota", function (event) {
         event.preventDefault()
 
         $.post("/mascota", {
-            id: "",
-            nombre: $("#txtNombre").val(),
-            sexo: $("#txtSexo").val(),
-            raza: $("#txtRaza").val(),
-            peso: $("#txtPeso").val(),
+            idMascota: "",
+            nombre:      $("#txtNombre").val(),
+            sexo:        $("#txtSexo").val(),
+            raza:        $("#txtRaza").val(),
+            peso:        $("#txtPeso").val(),
             condiciones: $("#txtCondiciones").val(),
-        }).done(function() {
-            $("#txtNombre").val("")
-            $("#txtSexo").val("")
-            $("#txtRaza").val("")
-            $("#txtPeso").val("")
-            $("#txtCondiciones").val("")
+        })
+    })
+
+    $(document).off("click", ".btn-eliminar").on("click", ".btn-eliminar", function () {
+        const id = $(this).data("idmascota")
+
+        if (!confirm("¿Seguro que deseas eliminar este mascota?")) {
+            return
+        }
+
+        $.post("/mascota/eliminar", { idMascota: id }, function () {
+            buscarMascotas()
+        }).fail(function(xhr) {
+            alert("Error al eliminar: " + xhr.responseText)
         })
     })
 
     $(document).on("click", ".btn-ingredientes", function (event) {
         const id = $(this).data("id")
 
-        $.get(`/mascotas/ingredientes/${id}`, function (html) {
+        $.get(`/productos/ingredientes/${id}`, function (html) {
             modal(html, "Ingredientes", [
                 {html: "Aceptar", class: "btn btn-secondary", fun: function (event) {
                     closeModal()
@@ -131,7 +140,6 @@ app.controller("mascotasCtrl", function ($scope, $http) {
         })
     })
 })
-
 
 const DateTime = luxon.DateTime
 let lxFechaHora
