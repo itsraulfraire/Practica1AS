@@ -207,12 +207,12 @@ def guardarMascotas():
     if not con.is_connected():
         con.reconnect()
 
-    idMascota          = request.form["idMascota"]
-    nombre             = request.form["nombre"]
-    sexo               = request.form["sexo"]
-    raza               = request.form["raza"]
-    peso               = request.form["peso"]
-    condiciones        = request.form["condiciones"]
+    idMascota   = request.form.get("idMascota")
+    nombre      = request.form.get("nombre")
+    sexo        = request.form.get("sexo")
+    raza        = request.form.get("raza")
+    peso        = request.form.get("peso")
+    condiciones = request.form.get("condiciones")
     # fechahora   = datetime.datetime.now(pytz.timezone("America/Matamoros"))
     
     cursor = con.cursor()
@@ -285,4 +285,5 @@ def eliminarMascota():
     con.close()
 
     return make_response(jsonify({}))
+
 
