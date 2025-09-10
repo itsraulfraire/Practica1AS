@@ -1,0 +1,12 @@
+{% for mascota in mascotas %}
+<tr>
+    <td>{{ mascota.idMascota }}</td>
+    <td>{{ mascota.nombre }}</td>
+    <td>{{ mascota.sexo }}</td>
+    <td>{{ mascota.raza }}</td
+    <td>{{ mascota.peso }}</td>
+    <td>{{ mascota.condiciones }}</td>
+    <td><button class="btn btn-info btn-eliminar" data-id="{{ mascota.idMascota }}">Eliminar</button></td>
+    <td><button class="btn btn-info btn-editar" data-id="{{ mascota.idMascota }}">Editar</button></td>
+</tr>
+{% endfor %}
