@@ -29,16 +29,16 @@ CORS(app)
 
 def pusherProductos():
     import pusher
-    
+
     pusher_client = pusher.Pusher(
-      app_id="2046005",
-      key="e57a8ad0a9dc2e83d9a2",
-      secret="8a116dd9600a3b04a3a0",
-      cluster="us2",
+      app_id='2046026',
+      key='c018d337fb7e8338dc3a',
+      secret='ee47376ce42adae4531e',
+      cluster='us2',
       ssl=True
     )
     
-    pusher_client.trigger("canalProductos", "eventoProductos", {"message": "Hola Mundo!"})
+    pusher_client.trigger('rapid-bird-168', 'eventoProductos', {'message': 'Hola mundo!'})
     return make_response(jsonify({}))
 
 @app.route("/")
@@ -275,3 +275,4 @@ def eliminarProducto():
     con.close()
 
     return make_response(jsonify({}))
+
