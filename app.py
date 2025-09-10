@@ -72,7 +72,7 @@ def iniciarSesion():
 
     cursor = con.cursor(dictionary=True)
     sql    = """
-    SELECT id_usuarios
+    SELECT id_usuario
     FROM usuarios
 
     WHERE nombre_usuario = %s
@@ -266,6 +266,7 @@ def eliminarMascota():
     con.close()
 
     return make_response(jsonify({}))
+
 
 
 
