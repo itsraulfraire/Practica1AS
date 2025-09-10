@@ -278,12 +278,10 @@ def eliminarMascota():
     DELETE FROM mascotas
     WHERE idMascota = %s
     """
-    val    = (idMascota,)
+    val    = (idMascota)
 
     cursor.execute(sql, val)
     con.commit()
     con.close()
 
     return make_response(jsonify({}))
-
-
