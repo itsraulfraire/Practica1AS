@@ -233,7 +233,7 @@ def guardarMascotas():
     else:
         sql = """
         INSERT INTO mascotas (nombre, sexo, raza, peso, condiciones)
-                    VALUES    (%s,          %s,      %s,    %s,    %s,     %s)
+                    VALUES (%s, %s, %s, %s, %s)
         """
         val =                 (nombre, sexo, raza, peso, condiciones)
     
@@ -285,3 +285,4 @@ def eliminarMascota():
     con.close()
 
     return make_response(jsonify({}))
+
