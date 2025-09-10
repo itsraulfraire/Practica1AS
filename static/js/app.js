@@ -99,7 +99,6 @@ app.controller("productosCtrl", function ($scope, $http) {
 
     buscarProductos()
     
-    // Enable pusher logging - don't include this in production
     Pusher.logToConsole = true
 
     var pusher = new Pusher("c018d337fb7e8338dc3a", {
@@ -108,10 +107,10 @@ app.controller("productosCtrl", function ($scope, $http) {
 
     var channel = pusher.subscribe("rapid-bird-168")
     channel.bind("eventoProductos", function(data) {
-        // alert(JSON.stringify(data))
         buscarProductos()
     })
 
+    $(document).off("submit", "#frmProducto")  
     $(document).on("submit", "#frmProducto", function (event) {
         event.preventDefault()
 
@@ -120,6 +119,10 @@ app.controller("productosCtrl", function ($scope, $http) {
             nombre: $("#txtNombre").val(),
             precio: $("#txtPrecio").val(),
             existencias: $("#txtExistencias").val(),
+        }).done(function() {
+            $("#txtNombre").val("")
+            $("#txtPrecio").val("")
+            $("#txtExistencias").val("")
         })
     })
 
@@ -191,4 +194,5 @@ document.addEventListener("DOMContentLoaded", function (event) {
 
     activeMenuOption(location.hash)
 })
+
 
