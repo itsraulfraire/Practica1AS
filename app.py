@@ -126,25 +126,6 @@ def tbodyMascotas():
 
     return render_template("tbodyMascotas.html", mascotas=registros)
 
-@app.route("/productos/ingredientes/<int:idMascota>")
-def productosIngredientes(idMascota):
-    if not con.is_connected():
-        con.reconnect()
-
-    cursor = con.cursor(dictionary=True)
-    sql    = """
-    SELECT productos.Nombre_Producto, ingredientes.*, productos_ingredientes.Cantidad FROM productos_ingredientes
-    INNER JOIN productos ON productos.Id_Producto = productos_ingredientes.Id_Producto
-    INNER JOIN ingredientes ON ingredientes.Id_Ingrediente = productos_ingredientes.Id_Ingrediente
-    WHERE productos_ingredientes.Id_Producto = %s
-    ORDER BY productos.Nombre_Producto
-    """
-
-    cursor.execute(sql, (idMascota, ))
-    registros = cursor.fetchall()
-
-    return render_template("modal.html", productosIngredientes=registros)
-
 @app.route("/mascotas/buscar", methods=["GET"])
 def buscarMascotas():
     if not con.is_connected():
