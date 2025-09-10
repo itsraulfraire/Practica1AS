@@ -17,21 +17,10 @@ app.config(function ($routeProvider, $locationProvider) {
         templateUrl: "/app",
         controller: "appCtrl"
     })
-    .when("/productos", {
-        templateUrl: "/productos",
-        controller: "productosCtrl"
+    .when("/mascotas", {
+        templateUrl: "/mascotas",
+        controller: "mascotasCtrl"
     })
-
-
-
-    .when("/decoraciones", {
-        templateUrl: "/decoraciones",
-        controller: "decoracionesCtrl"
-    })
-
-
-
-
     .otherwise({
         redirectTo: "/"
     })
@@ -81,7 +70,7 @@ app.controller("appCtrl", function ($scope, $http) {
         $.post("iniciarSesion", $(this).serialize(), function (respuesta) {
             if (respuesta.length) {
                 alert("Iniciaste Sesión")
-                window.location = "/#/productos"
+                window.location = "/#/mascotas"
 
                 return
             }
@@ -90,14 +79,14 @@ app.controller("appCtrl", function ($scope, $http) {
         })
     })
 })
-app.controller("productosCtrl", function ($scope, $http) {
-    function buscarProductos() {
-        $.get("/tbodyProductos", function (trsHTML) {
-            $("#tbodyProductos").html(trsHTML)
+app.controller("mascotasCtrl", function ($scope, $http) {
+    function buscarMascotas() {
+        $.get("/tbodyMascotas", function (trsHTML) {
+            $("#tbodyMascotas").html(trsHTML)
         })
     }
 
-    buscarProductos()
+    buscarMascotas()
     
     Pusher.logToConsole = true
 
@@ -106,30 +95,34 @@ app.controller("productosCtrl", function ($scope, $http) {
     })
 
     var channel = pusher.subscribe("rapid-bird-168")
-    channel.bind("eventoProductos", function(data) {
-        buscarProductos()
+    channel.bind("eventoMascotas", function(data) {
+        buscarMascotas()
     })
 
-    $(document).off("submit", "#frmProducto")  
-    $(document).on("submit", "#frmProducto", function (event) {
+    $(document).off("submit", "#frmMascota")  
+    $(document).on("submit", "#frmMascota", function (event) {
         event.preventDefault()
 
-        $.post("/producto", {
+        $.post("/mascota", {
             id: "",
             nombre: $("#txtNombre").val(),
-            precio: $("#txtPrecio").val(),
-            existencias: $("#txtExistencias").val(),
+            sexo: $("#txtSexo").val(),
+            raza: $("#txtRaza").val(),
+            peso: $("#txtPeso").val(),
+            condiciones: $("#txtCondiciones").val(),
         }).done(function() {
             $("#txtNombre").val("")
-            $("#txtPrecio").val("")
-            $("#txtExistencias").val("")
+            $("#txtSexo").val("")
+            $("#txtRaza").val("")
+            $("#txtPeso").val("")
+            $("#txtCondiciones").val("")
         })
     })
 
     $(document).on("click", ".btn-ingredientes", function (event) {
         const id = $(this).data("id")
 
-        $.get(`/productos/ingredientes/${id}`, function (html) {
+        $.get(`/mascotas/ingredientes/${id}`, function (html) {
             modal(html, "Ingredientes", [
                 {html: "Aceptar", class: "btn btn-secondary", fun: function (event) {
                     closeModal()
@@ -138,43 +131,6 @@ app.controller("productosCtrl", function ($scope, $http) {
         })
     })
 })
-
-
-
-app.controller("decoracionesCtrl", function ($scope, $http) {
-    function buscarDecoraciones() {
-        $.get("/tbodyDecoraciones", function (trsHTML) {
-            $("#tbodyDecoraciones").html(trsHTML)
-        })
-    }
-
-    buscarDecoraciones()
-    
-    // Enable pusher logging - don't include this in production
-    Pusher.logToConsole = true
-
-    var pusher = new Pusher("c018d337fb7e8338dc3a", {
-      cluster: "us2"
-    })
-
-    var channel = pusher.subscribe("rapid-bird-168")
-    channel.bind("eventoDecoraciones", function(data) {
-        // alert(JSON.stringify(data))
-        buscarDecoraciones()
-    })
-
-    $(document).on("submit", "#frmDecoracion", function (event) {
-        event.preventDefault()
-
-        $.post("/decoracion", {
-            id: "",
-            nombre: $("#txtNombre").val(),
-            precio: $("#txtPrecio").val(),
-            existencias: $("#txtExistencias").val(),
-        })
-    })
-})
-
 
 
 const DateTime = luxon.DateTime
@@ -194,5 +150,3 @@ document.addEventListener("DOMContentLoaded", function (event) {
 
     activeMenuOption(location.hash)
 })
-
-
